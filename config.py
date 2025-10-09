@@ -34,7 +34,7 @@ BASE_URL_CLAUDE = "https://api.anthropic.com"
 
 # --- 模型名称配置 ---
 MODEL_ZHIPU = "glm-4"
-MODEL_OPENAI = "gpt-4-turbo"
+MODEL_OPENAI = "gemini-2.5-pro(不易断流)"
 MODEL_GEMINI = "gemini-1.5-pro-latest"
 MODEL_CLAUDE = "claude-3-opus-20240229"
 
@@ -47,3 +47,4 @@ READING_PLAN_FILE = "reading_plan.json"
 # --- 解析器配置 ---
 EXCLUDED_KEYWORDS = ["说明", "目录", "扉页", "出版"]
 MIN_PDF_TOC_LEVEL = 3
+
