@@ -1,52 +1,53 @@
 # .github/workflows/daily_reading.yml
 
-# 工作流的名称，会显示在GitHub Actions页面
 name: 每日阅读分析自动化任务
 
-# 触发工作流的条件
 on:
-  # 1. 定时触发：使用Cron表达式
   schedule:
-    # 北京时间每天上午10点运行 (UTC时间是凌晨2点)
     - cron: '0 0 * * *'
-  
-  # 2. 手动触发：允许你从GitHub Actions页面点击按钮手动运行
   workflow_dispatch:
 
-# 定义工作流中的任务
 jobs:
   run-reading-analysis:
-    # 指定运行环境，使用最新的Ubuntu系统
     runs-on: ubuntu-latest
     
-    # 定义任务中的步骤
     steps:
-      # 第一步：检出代码 (包括.py脚本和.epub书籍)
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 第二步：设置Python 3.10 环境
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
-      # 第三步：安装项目所需的全部依赖库
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install zhipuai openai google-generativeai anthropic PyMuPDF ebooklib beautifulsoup4
 
-      # 第四步：运行你的主程序
       - name: Run main script
-        # 将GitHub Secrets作为环境变量注入到运行环境中
         env:
+          # --- 基础配置 Secrets ---
           SENDER_EMAIL: ${{ secrets.SENDER_EMAIL }}
           SENDER_AUTH_CODE: ${{ secrets.SENDER_AUTH_CODE }}
           RECEIVER_EMAILS: ${{ secrets.RECEIVER_EMAILS }}
+
+          # --- API 密钥 Secrets ---
           ZHIPU_API_KEY: ${{ secrets.ZHIPU_API_KEY }}
-          OPENAI_API_KEY: ${{ secrets.OPENAI_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           GEMINI_API_KEYS: ${{ secrets.GEMINI_API_KEYS }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        # 运行主文件，启动整个流程
+          
+          # --- 【核心修改 1】URL Secrets ---
+          ZHIPU_BASE_URL: ${{ secrets.ZHIPU_BASE_URL }}
+          OPENAI_BASE_URL: ${{ secrets.OPENAI_BASE_URL }}
+          GEMINI_BASE_URL: ${{ secrets.GEMINI_BASE_URL }}
+          CLAUDE_BASE_URL: ${{ secrets.CLAUDE_BASE_URL }}
+
+          # --- 【核心修改 2】模型名称 Secrets ---
+          MODEL_ZHIPU: ${{ secrets.MODEL_ZHIPU }}
+          MODEL_OPENAI: ${{ secrets.MODEL_OPENAI }}
+          MODEL_GEMINI: ${{ secrets.MODEL_GEMINI }}
+          MODEL_CLAUDE: ${{ secrets.MODEL_CLAUDE }}
+
         run: python main.py
