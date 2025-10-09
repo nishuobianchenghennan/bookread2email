@@ -8,9 +8,6 @@ on:
     branches:
       - gh-pages
       
-  # 允许手动触发
-  workflow_dispatch:
-
   # 定时触发
   schedule:
     # 北京时间每天上午10点 (UTC时间凌晨2点)
