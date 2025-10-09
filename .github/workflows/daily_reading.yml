@@ -1,16 +1,19 @@
-# .github/workflows/daily_reading.yml (V4.0 - 个性化持久存储版)
+# .github/workflows/daily_reading.yml (V4.1 - 增加手动触发)
 
 name: 每日阅读分析自动化任务
 
 on:
-  # 当代码被推送到 gh-pages 分支时触发
+  # 1. 当代码被推送到 gh-pages 分支时触发
   push:
     branches:
       - gh-pages
       
-  # 定时触发
+  # 2. 【核心修改】允许手动触发 (用于测试)
+  workflow_dispatch:
+
+  # 3. 定时触发
   schedule:
-    # 北京时间每天上午10点 (UTC时间凌晨2点)
+    # 北京时间每天上午8点 (UTC时间凌晨0点)
     - cron: '0 0 * * *'
 
 jobs:
@@ -19,7 +22,6 @@ jobs:
     
     steps:
       # 第一步：检出代码
-      # 【核心修改 1】明确指定检出 gh-pages 分支
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -60,15 +62,8 @@ jobs:
       - name: Commit and push changes
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          # 【核心修改 2】指定要提交的分支为 gh-pages
           commit_branch: gh-pages
-          
-          # 提交信息
           commit_message: "chore: 自动更新阅读进度"
-          
-          # 【核心修改 3】使用你提供的个人信息作为提交者
           commit_user_name: "Yixing Gu"
           commit_user_email: "77688784@qq.com"
-          
-          # 指定要追踪和提交的文件
           file_pattern: "*.json"
